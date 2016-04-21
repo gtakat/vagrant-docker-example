@@ -25,6 +25,9 @@ Vagrant.configure(2) do |config|
   # your network.
   # config.vm.network "public_network"
 
+  # for rails
+  config.vm.network "forwarded_port", guest: 3000, host: 3000
+
   if Vagrant.has_plugin?("vagrant-cachier")
     config.cache.scope = :box 
   end
@@ -34,6 +37,7 @@ Vagrant.configure(2) do |config|
     v.name = "hotatevm1"
     v.cpus = 1
     v.memory = 2048
+    v.customize ["setextradata", :id, "VBoxInternal/Devices/VMMDev/0/Config/GetHostTimeDisabled", 0]
   end
   config.vm.provision "shell", inline: $ubuntu_setup
   config.vm.provision "docker-build", type: "docker" do |d|
@@ -46,7 +50,7 @@ Vagrant.configure(2) do |config|
   config.vm.provision "docker-run", type: "docker", run: "always" do |d|
 #    d.run "hotate/nginx", args: "--name=hotate_nginx -p 80:80 -d -t -v /vagrant:/tmp/shared -v /etc/localtime:/etc/localtime:ro"
 #    d.run "hotate/mysql", args: "--name=hotate_mysql -p 3306:3306 -d -t -v /vagrant:/tmp/shared -v /etc/localtime:/etc/localtime:ro --link hotate_nginx:web1"
-    d.run "hotate/rails", args: "--name=hotate_rails -p 80:80 -d -t -v /vagrant:/tmp/shared -v /etc/localtime:/etc/localtime:ro"
+    d.run "hotate/rails", args: "--name=hotate_rails -p 80:80 -p 3000:3000 -d -t -v /vagrant:/tmp/shared -v /etc/localtime:/etc/localtime:ro"
     d.run "hotate/mysql", args: "--name=hotate_mysql -p 3306:3306 -d -t -v /vagrant:/tmp/shared -v /etc/localtime:/etc/localtime:ro --link hotate_rails:web1"
   end
 end
