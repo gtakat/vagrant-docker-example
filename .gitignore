@@ -35,5 +35,10 @@ bower.json
 .powenv
 
 # Vagrant
-.vagrant
+/.vagrant
 
+# RubyMine
+/.idea
+
+# My work directory
+/work
