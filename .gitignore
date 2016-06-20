@@ -39,6 +39,7 @@ bower.json
 
 # RubyMine
 /.idea
+*.iml
 
 # My work directory
 /work
