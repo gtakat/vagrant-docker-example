@@ -43,14 +43,17 @@ Vagrant.configure(2) do |config|
   config.vm.provision "docker-build", type: "docker" do |d|
     d.build_image "/vagrant/docker/base", args: "-t hotate/base"
     d.build_image "/vagrant/docker/nginx", args: "-t hotate/nginx"
-    d.build_image "/vagrant/docker/rails", args: "-t hotate/rails"
-    d.build_image "/vagrant/docker/mysql", args: "-t hotate/mysql"
+    # d.build_image "/vagrant/docker/rails", args: "-t hotate/rails"
+    # d.build_image "/vagrant/docker/mysql", args: "-t hotate/mysql"
+    d.build_image "/vagrant/docker/php", args: "-t hotate/php"
   end
   config.vm.provision "shell", inline: "docker ps -a ; for i in `docker ps -a -q` ; do echo -n 'stop : ' ; docker stop $i ; echo -n 'rm   : ' ; docker rm $i  ; done"
   config.vm.provision "docker-run", type: "docker", run: "always" do |d|
-#    d.run "hotate/nginx", args: "--name=hotate_nginx -p 80:80 -d -t -v /vagrant:/tmp/shared -v /etc/localtime:/etc/localtime:ro"
-#    d.run "hotate/mysql", args: "--name=hotate_mysql -p 3306:3306 -d -t -v /vagrant:/tmp/shared -v /etc/localtime:/etc/localtime:ro --link hotate_nginx:web1"
-    d.run "hotate/rails", args: "--name=hotate_rails -p 80:80 -p 3000:3000 -d -t -v /vagrant:/tmp/shared -v /etc/localtime:/etc/localtime:ro"
-    d.run "hotate/mysql", args: "--name=hotate_mysql -p 3306:3306 -d -t -v /vagrant:/tmp/shared -v /etc/localtime:/etc/localtime:ro --link hotate_rails:web1"
+    # d.run "hotate/nginx", args: "--name=hotate_nginx -p 80:80 -d -t -v /vagrant:/tmp/shared -v /etc/localtime:/etc/localtime:ro"
+    # d.run "hotate/mysql", args: "--name=hotate_mysql -p 3306:3306 -d -t -v /vagrant:/tmp/shared -v /etc/localtime:/etc/localtime:ro --link hotate_nginx:web1"
+
+    # d.run "hotate/rails", args: "--name=hotate_rails -p 80:80 -p 3000:3000 -d -t -v /vagrant:/tmp/shared -v /etc/localtime:/etc/localtime:ro"
+    # d.run "hotate/mysql", args: "--name=hotate_mysql -p 3306:3306 -d -t -v /vagrant:/tmp/shared -v /etc/localtime:/etc/localtime:ro --link hotate_rails:web1"
+    d.run "hotate/php", args: "--name=hotate_php -p 80:80 -d -t -v /vagrant:/tmp/shared -v /etc/localtime:/etc/localtime:ro"
   end
 end
